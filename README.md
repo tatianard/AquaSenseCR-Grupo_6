@@ -77,7 +77,7 @@ docker compose up -d
 ```
 ## Creación y verificación del esquema CQL
 
-AquaSenseCR utiliza el archivo `esquema.cql` para crear el *keyspace* `aquasense` y las cuatro tablas de ScyllaDB.
+Se utiliza el archivo `esquema.cql` para crear el *keyspace* `aquasense` y las cuatro tablas de ScyllaDB.
 
 ### 1. Ejecutar el esquema
 
@@ -99,3 +99,75 @@ Deben aparecer **cuatro** tablas:
 - mediciones_por_zona
 - anomalias_por_zona
 - resumen_diario_zona
+
+## Verificación de la conexión con Python
+
+Este proyecto utiliza Python para conectarse a ScyllaDB y ejecutar las operaciones de carga y consulta.
+
+### 1. Requisitos previos
+
+- Python y la librería `scylla-driver` deben estar instalados.
+
+### 2. Probar la conexión
+
+Desde la carpeta principal del proyecto, ejecutar:
+
+```bash
+python probar_conexion.py
+```
+
+### 3. Verificar el resultado
+
+Si la conexión funciona correctamente, se mostrará una salida que incluye:
+
+```text
+Conectando con ScyllaDB...
+CONEXION CORRECTA
+Keyspaces encontrados:
+- aquasense
+```
+
+### 3. Ejecución de los scripts de Python
+
+## A. Instalar las dependencias
+
+Desde la carpeta raíz del proyecto, ejecutar:
+
+python -m pip install pandas numpy cassandra-driver
+
+## B. Verificar la conexión
+
+Con ScyllaDB iniciado y las tablas creadas:
+
+python scripts/probar_conexion.py
+
+## C. Generar los datos sintéticos
+python scripts/generar_datos.py
+
+
+Este script genera los archivos CSV dentro de la carpeta data/.
+
+## D. Cargar las mediciones
+python scripts/cargar_datos.py
+
+
+Este proceso carga las mediciones en las tablas por sensor y por zona.
+
+## E. Generar el resumen diario
+python scripts/generar_resumen.py
+
+## F. Cargar las anomalías
+python scripts/cargar_anomalias.py
+
+## G. Ejecutar las pruebas de rendimiento
+python scripts/medir_consultas.py
+
+Los resultados de las pruebas se guardan en la carpeta resultados/.
+
+### Evidencias del proyecto
+
+La carpeta resultados contiene archivos relacionados con las evidencias iniciales, la verificación del resumen, las pruebas de recuperación y las métricas de rendimiento de las consultas.
+
+### Limitaciones del entorno
+
+La configuración actual utiliza un nodo de ScyllaDB para las pruebas locales. Por tanto, los resultados obtenidos no demuestran por sí solos alta disponibilidad ni tolerancia a la caída de un nodo.
