@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS mediciones_por_sensor (
     caudal double,
     presion double,
     temperatura double,
-    calidad text,
+    calidad double,
     es_anomalia boolean,
     PRIMARY KEY ((sensor_id, mes_anio), timestamp)
 ) WITH CLUSTERING ORDER BY (timestamp DESC);
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS mediciones_por_zona (
     caudal double,
     presion double,
     temperatura double,
-    calidad text,
+    calidad double,
     es_anomalia boolean,
     PRIMARY KEY ((zona_id, mes_anio), timestamp, sensor_id)
 ) WITH CLUSTERING ORDER BY (timestamp DESC, sensor_id ASC);
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS anomalias_por_zona (
     presion double,
     caudal double,
     temperatura double,
-    calidad text,
+    calidad double,
     PRIMARY KEY ((zona_id, mes_anio), timestamp, sensor_id)
 ) WITH CLUSTERING ORDER BY (timestamp DESC, sensor_id ASC);
 
