@@ -1,5 +1,5 @@
 consulta,repeticiones,filas_de_ultima_consulta,mediana_ms,p95_ms,minimo_ms,maximo_ms
-ultimas_mediciones_sensor,30,20,2.026,2.587,1.834,3.286
-intervalo_temporal_sensor,30,48,2.581,3.544,2.33,3.79
-intervalo_temporal_zona,30,100,2.492,3.312,2.233,3.328
-resumen_diario_zona,30,31,2.109,2.795,1.757,3.001
+ultimas_mediciones_sensor,30,20,3.75,5.214,2.85,5.568
+intervalo_temporal_sensor,30,48,3.39,4.361,2.916,5.042
+intervalo_temporal_zona,30,100,4.279,5.437,3.234,8.389
+resumen_diario_zona,30,31,3.692,4.236,2.769,5.484
