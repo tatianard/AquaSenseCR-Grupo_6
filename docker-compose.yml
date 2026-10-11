@@ -1,9 +1,24 @@
-version: '3.8'
+name: aquasensecr
+
 services:
   scylla:
-    image: scylladb/scylla:latest
-    container_name: aquasense-scylla
+    image: scylladb/scylla:2026.1.14
+
     ports:
-      - "9042:9042"
-    command: --smp 1 --memory 1G --overprovisioned 1 --api-address 0.0.0.0
-    
+      - "127.0.0.1:9042:9042"
+
+    volumes:
+      - scylla_data:/var/lib/scylla
+
+    command:
+      - --developer-mode
+      - "1"
+      - --smp
+      - "1"
+      - --memory
+      - "2G"
+      - --overprovisioned
+      - "1"
+
+volumes:
+  scylla_data:
