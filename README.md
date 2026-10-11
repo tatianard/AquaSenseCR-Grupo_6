@@ -77,7 +77,7 @@ docker compose up -d
 ```
 ## Creación y verificación del esquema CQL
 
-AquaSenseCR utiliza el archivo `esquema.cql` para crear el *keyspace* `aquasense` y las cuatro tablas de ScyllaDB.
+Se utiliza el archivo `esquema.cql` para crear el *keyspace* `aquasense` y las cuatro tablas de ScyllaDB.
 
 ### 1. Ejecutar el esquema
 
