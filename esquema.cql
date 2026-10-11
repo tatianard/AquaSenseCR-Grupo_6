@@ -6,7 +6,6 @@
 -- Se utiliza el keyspace aquasense, independiente del nombre del proyecto Docker.
 
 CREATE KEYSPACE IF NOT EXISTS aquasense
-CREATE KEYSPACE IF NOT EXISTS aquasense
 WITH replication = {
     'class': 'NetworkTopologyStrategy',
     'replication_factor': 1
