@@ -100,6 +100,33 @@ Deben aparecer **cuatro** tablas:
 - anomalias_por_zona
 - resumen_diario_zona
 
+## Verificación de la conexión con Python
+
+Este proyecto utiliza Python para conectarse a ScyllaDB y ejecutar las operaciones de carga y consulta.
+
+### 1. Requisitos previos
+
+- Python y la librería `scylla-driver` deben estar instalados.
+
+### 2. Probar la conexión
+
+Desde la carpeta principal del proyecto, ejecutar:
+
+```bash
+python probar_conexion.py
+```
+
+### 3. Verificar el resultado
+
+Si la conexión funciona correctamente, se mostrará una salida que incluye:
+
+```text
+Conectando con ScyllaDB...
+CONEXION CORRECTA
+Keyspaces encontrados:
+- aquasense
+```
+
 ### 3. Ejecución de los scripts de Python
 
 ## A. Instalar las dependencias
