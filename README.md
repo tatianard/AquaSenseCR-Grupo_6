@@ -100,7 +100,8 @@ Deben aparecer **cuatro** tablas:
 - anomalias_por_zona
 - resumen_diario_zona
 
-Ejecución de los scripts de Python
+## Ejecución de los scripts de Python
+
 1. Instalar las dependencias
 
 Desde la carpeta raíz del proyecto, ejecutar:
@@ -135,7 +136,7 @@ python scripts/cargar_anomalias.py
 python scripts/medir_consultas.py
 
 
-Los resultados de las pruebas se guardan en la carpeta resultados/.
+Los resultados de las pruebas se guardan en la carpeta resultados.
 
 Evidencias del proyecto
 
