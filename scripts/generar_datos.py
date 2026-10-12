@@ -6,43 +6,37 @@ from datetime import datetime, timedelta
 # Parámetros del proyecto
 NUM_SENSORES = 1000
 NUM_ZONAS = 20
+NUM_MEDICIONES = 1000
+SEMILLA = 42
+PROPORCION_ANOMALIAS = 0.01
+UMBRAL_PRESION = 6.0
 
-# Generación de sensores
+# Generar sensores y asignarlos a las zonas
 sensores = []
 
 for i in range(NUM_SENSORES):
     sensor = {
-        'sensor_id': f'S{i+1:04d}',
-        'zona_id': f'Z{(i % NUM_ZONAS) + 1:02d}',
+        "sensor_id": f"S{i+1:04d}",
+        "zona_id": f"Z{(i % NUM_ZONAS) + 1:02d}"
     }
     sensores.append(sensor)
 
-# Conversión a DataFrame
-df_sensores = pd.DataFrame(sensores)    
+df_sensores = pd.DataFrame(sensores)
 
-# Resultados
-print(df_sensores.head())
-print(f"\nTotal de sensores: {len(df_sensores)}")
-print("\nSensores por zona:")
-print(df_sensores["zona_id"].value_counts().sort_index())
-
-
-
-
-
-
-# Generación de mediciones
-NUM_MEDICIONES = 1000
-SEMILLA = 42
-
+# Generar las mediciones de cada sensor
 rng = np.random.default_rng(SEMILLA)
 fecha_inicio = datetime(2026, 1, 1)
 
 mediciones = []
 
 for sensor in sensores:
+    calidad_anterior = 95.0
 
     for j in range(NUM_MEDICIONES):
+
+        # La calidad cambia ligeramente respecto a la lectura anterior
+        calidad_anterior = 0.9 * calidad_anterior + 0.1 * 95 + rng.normal(0, 0.3)
+        calidad_anterior = round(max(90, min(100, calidad_anterior)), 2)
 
         medicion = {
             "sensor_id": sensor["sensor_id"],
@@ -51,131 +45,67 @@ for sensor in sensores:
             "caudal": round(rng.normal(12, 2), 2),
             "presion": round(rng.normal(3.5, 0.4), 2),
             "temperatura": round(rng.normal(24, 2), 2),
-            "calidad": 1
+            "calidad": calidad_anterior
         }
 
         mediciones.append(medicion)
 
 df_mediciones = pd.DataFrame(mediciones)
 
-# Incorporación de anomalías sintéticas
-PROPORCION_ANOMALIAS = 0.01  #Seleccionamos aleatoriamente el 1% de las mediciones
+# Introducir presiones elevadas en el 1% de las mediciones
+n_anomalias = int(len(df_mediciones) * PROPORCION_ANOMALIAS)
 
-n_anomalias = int(
-    len(df_mediciones) * PROPORCION_ANOMALIAS
-)
-
-# Marcar todas las observaciones como normales
-df_mediciones["es_anomalia"] = False
-
-# Seleccionar observaciones aleatoriamente
 indices_anomalos = rng.choice(
     df_mediciones.index,
     size=n_anomalias,
     replace=False
 )
 
-# Introducir valores anómalos de presión
-df_mediciones.loc[indices_anomalos, "presion"] = 8.0  # Cambiamos su presión
+df_mediciones.loc[indices_anomalos, "presion"] = rng.uniform(
+    6.5, 8.5, size=n_anomalias
+).round(2)
 
-# Marcar las observaciones alteradas
-df_mediciones.loc[indices_anomalos, "es_anomalia"] = True
+# Identificar las anomalías según el umbral de presión
+df_mediciones["es_anomalia"] = df_mediciones["presion"] > UMBRAL_PRESION
 
-# Verificar mediciones generadas
+# Verificar los datos generados
+mediciones_por_sensor = df_mediciones.groupby("sensor_id").size()
 
-print("\nPrimeras mediciones:")
-print(df_mediciones.head())
-
-print("\nTotal de mediciones:", len(df_mediciones))
-
-
-# Verificar anomalías
-print("\nResumen de anomalías:")
-print(df_mediciones["es_anomalia"].value_counts())
-print("\nPorcentaje de anomalías:")
-print(df_mediciones["es_anomalia"].mean() * 100)
-
-
-
-
-# Validación de la consistencia de los datos
-
-# 1. Cantidad de sensores
-print("\nSensores únicos:")
-print(df_mediciones["sensor_id"].nunique())
-
-# 2. Total de mediciones
-print("\nTotal de mediciones:")
-print(len(df_mediciones))
-
-# 3. Mediciones por sensor
-mediciones_por_sensor = df_mediciones.groupby(
-    "sensor_id"
-).size()
-
-print("\nResumen de mediciones por sensor:")
-print(mediciones_por_sensor.describe())
-
-# 4. Valores faltantes
-print("\nValores faltantes por variable:")
-print(df_mediciones.isnull().sum())
-
-# 5. Registros duplicados
 duplicados = df_mediciones.duplicated(
     subset=["sensor_id", "timestamp"]
 ).sum()
 
-print("\nRegistros duplicados:", duplicados)
-
-# 6. Proporcion de anomalías
-porcentaje_anomalias = (
-    df_mediciones["es_anomalia"].mean() * 100
-)
-
-print("\nPorcentaje de anomalías:")
-print(round(porcentaje_anomalias, 2))
-
-# 7. Comprobaciones automáticas
-assert df_mediciones["sensor_id"].nunique() == 1000
-assert len(df_mediciones) == 1000000
-assert mediciones_por_sensor.eq(1000).all()
+# Comprobaciones de los datos generados
+assert df_sensores["zona_id"].nunique() == NUM_ZONAS
+assert df_mediciones["sensor_id"].nunique() == NUM_SENSORES
+assert len(df_mediciones) == NUM_SENSORES * NUM_MEDICIONES
+assert mediciones_por_sensor.eq(NUM_MEDICIONES).all()
 assert not df_mediciones.isnull().any().any()
 assert duplicados == 0
-assert df_mediciones["es_anomalia"].sum() == 10000
+assert 0.005 <= df_mediciones["es_anomalia"].mean() <= 0.015
+assert df_mediciones["calidad"].between(90, 100).all()
 
-
-
-
-# Exportación de datos a CSV
-
-# Crear carpeta para los datos generados
+# Guardar los archivos CSV
 carpeta_datos = Path("data")
 carpeta_datos.mkdir(exist_ok=True)
 
-# Exportar sensores
-df_sensores.to_csv(
-    carpeta_datos / "sensores.csv",
-    index=False
-)
+df_sensores.to_csv(carpeta_datos / "sensores.csv", index=False)
+df_mediciones.to_csv(carpeta_datos / "mediciones.csv", index=False)
 
-# Exportar mediciones
-df_mediciones.to_csv(
-    carpeta_datos / "mediciones.csv",
-    index=False
-)
+# Mostrar resultados
+print("\nTotal de sensores:", len(df_sensores))
+print("Total de zonas:", df_sensores["zona_id"].nunique())
+print("Total de mediciones:", len(df_mediciones))
+print("Total de anomalías:", df_mediciones["es_anomalia"].sum())
+print("Porcentaje de anomalías:", round(df_mediciones["es_anomalia"].mean() * 100, 2))
 
+print("\nValores de calidad:")
+print("Mínimo:", df_mediciones["calidad"].min())
+print("Máximo:", df_mediciones["calidad"].max())
+print("Promedio:", round(df_mediciones["calidad"].mean(), 2))
 
+print("\nPresión de las mediciones anómalas:")
+print("Mínimo:", df_mediciones.loc[df_mediciones["es_anomalia"], "presion"].min())
+print("Máximo:", df_mediciones.loc[df_mediciones["es_anomalia"], "presion"].max())
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+print("\nArchivos CSV generados correctamente.")
