@@ -179,6 +179,46 @@ Para ejecutar las consultas del archivo `consultas_rev.cql`:
 docker compose cp consultas_rev.cql scylla:/tmp/consultas_rev.cql
 docker compose exec -T scylla cqlsh -f /tmp/consultas_rev.cql
 ```
+## Carga de anomalías y generación de resúmenes
+
+Es necesario contar con el archivo `mediciones.csv` en la carpeta local del proyecto
+
+### 1. Cargar las anomalías
+
+Una vez cargadas las mediciones en ScyllaDB, ejecutar:
+
+```bash
+python cargar_anomalias.py
+```
+El programa selecciona las mediciones anómalas del CSV y las almacena en la tabla `anomalias_por_zona`.
+
+### 2. Generar los resúmenes diarios
+
+Ejecutar:
+
+```bash
+python generar_resumen.py
+```
+El programa calcula las estadísticas diarias por zona y las almacena en `resumen_diario_zona`, incluyendo mediciones, anomalías y valores de presión, caudal y calidad.
+
+### 3. Verificar los datos cargados a las tablas derivadas
+
+Para ejecutar las consultas guardadas en `consultas_anomaresu.cql`:
+
+```bash
+docker compose cp consultas_anomaresu.cql scylla:/tmp/consultas_anomaresu.cql
+docker compose exec -T scylla cqlsh -f /tmp/consultas_anomaresu.cql
+```
+
+**Nota:** Al igual que en el caso anterior, las consultas de verificación se realizan directamente sobre las tablas ScyllaDB y no del CSV. 
+
+
+
+
+
+
+
+
 
 ### 3. Ejecución de los scripts de Python
 
