@@ -223,7 +223,34 @@ docker compose exec -T scylla cqlsh -f /tmp/consultas_anomaresu.cql
 
 **Nota:** Al igual que en el caso anterior, las consultas de verificación se realizan directamente sobre las tablas ScyllaDB y no del CSV. 
 
+## Validaciones y evidencias
 
+### 1. Ejecutar las validaciones
+
+Una vez cargados los datos en ScyllaDB, ejecutar:
+
+```bash
+python validaciones.py
+```
+
+### 2. Pruebas realizadas
+
+- **Consultas por sensor:** últimas mediciones e intervalos temporales.
+- **Consultas por zona:** recuperación de mediciones por zona y periodo.
+- **Anomalías:** consulta de lecturas anómalas y verificación del umbral de presión.
+- **Resúmenes diarios:** consulta y verificación de estadísticas por zona.
+- **Particiones:** comprobación de los registros almacenados por sensor, zona y mes.
+- **Concurrencia:** comparación de 1 000 escrituras distribuidas entre 20 zonas y 1 000 concentradas en una sola.
+
+### 3. Evidencias generadas
+
+**Nota:** Los resultados se guardan automáticamente en la carpeta `evidencias`:
+
+- `evidencias_iniciales.txt`: información del entorno y resultados de las consultas funcionales.
+- `prueba_recuperacion.txt`: verificación de los registros de las cuatro tablas.
+- `rendimiento_consultas.csv`: tiempos y estadísticas de las consultas.
+- `verificacion_resumen.txt`: ejemplos de resúmenes diarios con sus estadísticas.
+- `rendimiento_concurrencia.csv`: resultados de las pruebas de escrituras concurrentes.
 
 
 
