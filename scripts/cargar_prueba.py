@@ -4,13 +4,10 @@ from datetime import datetime
 from cassandra.cluster import Cluster
 from cassandra.io.asyncioreactor import AsyncioConnection
 
-
+# Conexión local con ScyllaDB
 class TraductorDireccion:
     def translate(self, address):
-        if address == "172.18.0.2":
-            return "127.0.0.1"
-        return address
-
+        return "127.0.0.1"
 
 cluster = None
 
@@ -27,6 +24,7 @@ try:
     session = cluster.connect("aquasense")
     print("Conexion correcta con ScyllaDB.")
 
+    # Preparar las inserciones en las dos tablas
     insertar_sensor = session.prepare("""
         INSERT INTO mediciones_por_sensor
         (sensor_id, mes_anio, timestamp, zona_id,
@@ -44,7 +42,7 @@ try:
     total = 0
     inicio = time.perf_counter()
 
-    # Selecciona 100 registros distribuidos por el archivo.
+    # Tomar 100 mediciones distribuidas en el CSV
     with open(
         "data/mediciones.csv",
         "r",
@@ -65,9 +63,10 @@ try:
             caudal = float(fila["caudal"])
             presion = float(fila["presion"])
             temperatura = float(fila["temperatura"])
-            calidad = str(fila["calidad"])
+            calidad = float(fila["calidad"])
             es_anomalia = fila["es_anomalia"].lower() == "true"
 
+            # Insertar en la tabla por sensor
             session.execute(
                 insertar_sensor,
                 (
@@ -77,6 +76,7 @@ try:
                 )
             )
 
+            # Insertar en la tabla por zona
             session.execute(
                 insertar_zona,
                 (
