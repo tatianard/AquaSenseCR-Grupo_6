@@ -79,5 +79,8 @@ CREATE TABLE IF NOT EXISTS resumen_diario_zona (
     total_mediciones bigint,
     total_anomalias bigint,
     presion_maxima double,
+    presion_promedio double,
+    caudal_promedio double,
+    calidad_promedio double,
     PRIMARY KEY (zona_id, fecha)
 ) WITH CLUSTERING ORDER BY (fecha DESC);
