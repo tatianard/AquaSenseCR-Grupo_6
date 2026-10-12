@@ -157,6 +157,29 @@ Los archivos se guardan automáticamente en la carpeta `data`:
 - `sensores.csv`
 - `mediciones.csv`
 
+## Carga de datos y consultas de prueba
+
+### 1. Cargar las mediciones
+
+Una vez generados los CSV, ejecutar desde la carpeta principal del proyecto:
+
+```bash
+python cargar_datos.py
+```
+
+El programa carga 1 000 000 de mediciones en las tablas `mediciones_por_sensor` y `mediciones_por_zona`, realizando 2 000 000 de escrituras.
+
+### 2. Verificar los datos almacenados
+
+Para ejecutar las consultas del archivo `consultas_rev.cql`:
+
+**Nota:** Las consultas se realizan directamente sobre las tablas de ScyllaDB, no sobre los CSV. Es importante haber seguido los pasos anteriores.
+
+```bash
+docker compose cp consultas_rev.cql scylla:/tmp/consultas_rev.cql
+docker compose exec -T scylla cqlsh -f /tmp/consultas_rev.cql
+```
+
 ### 3. Ejecución de los scripts de Python
 
 ## A. Instalar las dependencias
