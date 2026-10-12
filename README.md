@@ -126,6 +126,36 @@ CONEXION CORRECTA
 Keyspaces encontrados:
 - aquasense
 ```
+## Generación de datos sintéticos
+
+Mediante `generar_datos.py` se simulan las mediciones sintéticas de los sensores de agua potable.
+
+### 1. Requisitos previos
+
+- Python instalado y funcionando.
+- Librerías `scylla-driver`, `pandas` y `numpy` instaladas.
+
+### 2. Generar los datos
+
+Ejecutar desde la carpeta principal del proyecto:
+
+```bash
+python generar_datos.py
+```
+
+### 2. Verificar los resultados
+
+El programa genera:
+
+- 1 000 sensores distribuidos en 20 zonas.
+- 1 000 000 de mediciones.
+- Aproximadamente un 1 % de anomalías de presión.
+- Valores de caudal, presión, temperatura e índice de calidad.
+
+Los archivos se guardan automáticamente en la carpeta `data`:
+
+- `sensores.csv`
+- `mediciones.csv`
 
 ### 3. Ejecución de los scripts de Python
 
