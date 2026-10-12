@@ -1,8 +1,19 @@
 # AquaSenseCR
 
+XS0131 - Gestión de Bases de Datos y Análisis de Información
+
+AquaSenseCR utiliza **ScyllaDB**, una base de datos NoSQL de columnas anchas (*wide-column*).
+
+### Integrantes: 
+
+- David Brenes
+- Fernando López
+- Catalina Monge
+- Tatiana Ramos
+
 ## Instalación y ejecución de ScyllaDB con Docker
 
-AquaSenseCR utiliza **ScyllaDB**, una base de datos NoSQL de columnas anchas (*wide-column*). Mediante **Docker Compose**, cada usuario puede ejecutar su propia instancia local en Windows, macOS o Linux.
+Mediante **Docker Compose**, cada usuario puede ejecutar su propia instancia local en Windows, macOS o Linux.
 
 ### 1. Requisitos previos
 
