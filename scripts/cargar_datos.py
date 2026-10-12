@@ -6,18 +6,15 @@ from cassandra.cluster import Cluster
 from cassandra.io.asyncioreactor import AsyncioConnection
 from cassandra.concurrent import execute_concurrent
 
-
 ARCHIVO_CSV = "data/mediciones.csv"
 TAMANO_BLOQUE = 500
 CONCURRENCIA = 50
 MOSTRAR_CADA = 10000
 
-
+# Conexión local con ScyllaDB
 class TraductorDireccion:
     def translate(self, address):
-        if address == "172.18.0.2":
-            return "127.0.0.1"
-        return address
+        return "127.0.0.1"
 
 
 def main():
@@ -39,6 +36,7 @@ def main():
         session = cluster.connect("aquasense")
         print("Conexion correcta con ScyllaDB.")
 
+        # Preparar las inserciones
         insertar_sensor = session.prepare("""
             INSERT INTO mediciones_por_sensor
             (sensor_id, mes_anio, timestamp, zona_id,
@@ -55,6 +53,7 @@ def main():
 
         bloque = []
 
+        # Ejecutar las inserciones por bloques
         def guardar_bloque():
             nonlocal total_escrituras
 
@@ -84,6 +83,7 @@ def main():
             total_escrituras += len(bloque)
             bloque.clear()
 
+        # Leer las mediciones del CSV
         with open(
             ARCHIVO_CSV,
             "r",
@@ -94,9 +94,7 @@ def main():
             lector = csv.DictReader(archivo)
 
             for fila in lector:
-                fecha = datetime.fromisoformat(
-                    fila["timestamp"]
-                )
+                fecha = datetime.fromisoformat(fila["timestamp"])
                 mes_anio = fecha.strftime("%Y-%m")
 
                 sensor_id = fila["sensor_id"]
@@ -104,7 +102,7 @@ def main():
                 caudal = float(fila["caudal"])
                 presion = float(fila["presion"])
                 temperatura = float(fila["temperatura"])
-                calidad = str(fila["calidad"])
+                calidad = float(fila["calidad"])
                 es_anomalia = (
                     fila["es_anomalia"].strip().lower()
                     == "true"
@@ -133,10 +131,9 @@ def main():
                 if len(bloque) >= TAMANO_BLOQUE * 2:
                     guardar_bloque()
 
+                # Mostrar el avance de la carga
                 if total_mediciones % MOSTRAR_CADA == 0:
-                    transcurrido = (
-                        time.perf_counter() - inicio
-                    )
+                    transcurrido = time.perf_counter() - inicio
                     velocidad = (
                         total_mediciones / transcurrido
                         if transcurrido > 0 else 0
@@ -156,18 +153,7 @@ def main():
 
         duracion = time.perf_counter() - inicio
 
-        print("\nCarga terminada correctamente.")
-        print(f"Mediciones procesadas: {total_mediciones:,}")
-        print(f"Escrituras confirmadas: {total_escrituras:,}")
-        print(f"Tiempo total: {duracion:.2f} segundos")
-
-        if duracion > 0:
-            print(
-                "Velocidad media: "
-                f"{total_mediciones / duracion:.2f} "
-                "mediciones/s"
-            )
-
+        # Comprobar la cantidad de registros
         if total_mediciones != 1_000_000:
             raise RuntimeError(
                 "El CSV no contenia exactamente "
@@ -178,6 +164,18 @@ def main():
             raise RuntimeError(
                 "La cantidad de escrituras no coincide "
                 "con las 2.000.000 esperadas."
+            )
+
+        print("\nCarga terminada correctamente.")
+        print(f"Mediciones procesadas: {total_mediciones:,}")
+        print(f"Escrituras confirmadas: {total_escrituras:,}")
+        print(f"Tiempo total: {duracion:.2f} segundos")
+
+        if duracion > 0:
+            print(
+                "Velocidad media: "
+                f"{total_mediciones / duracion:.2f} "
+                "mediciones/s"
             )
 
     finally:
