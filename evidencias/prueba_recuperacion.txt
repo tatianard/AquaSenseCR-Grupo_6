@@ -1,0 +1,9 @@
+VERIFICACION DE DATOS - AquaSenseCR
+Conteos realizados por claves de particion conocidas.
+
+mediciones_por_sensor: 1,000,000 filas
+mediciones_por_zona: 1,000,000 filas
+anomalias_por_zona: 10,000 filas
+resumen_diario_zona: 840 filas
+Mediciones representadas en resumen: 1,000,000
+Anomalias representadas en resumen: 10,000

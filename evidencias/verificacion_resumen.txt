@@ -1,0 +1,10 @@
+VERIFICACION DE RESUMENES - AquaSenseCR
+Total de filas: 840 (verificado en prueba_recuperacion.txt)
+
+Ultimos cinco resumenes de Z01:
+fecha | mediciones | anomalias | presion_maxima | presion_promedio | caudal_promedio | calidad_promedio
+2026-02-11 | 800 | 9 | 8.27 | 3.54 | 12.11 | 94.79
+2026-02-10 | 1200 | 12 | 8.09 | 3.53 | 12.07 | 94.94
+2026-02-09 | 1200 | 14 | 8.49 | 3.54 | 12.05 | 95.08
+2026-02-08 | 1200 | 8 | 8.21 | 3.52 | 12.04 | 95.10
+2026-02-07 | 1200 | 17 | 8.27 | 3.57 | 12.13 | 95.10

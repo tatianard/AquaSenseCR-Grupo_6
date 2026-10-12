@@ -1,0 +1,17 @@
+AquaSenseCR - EVIDENCIAS INICIALES
+Fecha de validacion: 2026-10-12 00:17:22
+Tecnologia: ScyllaDB 3.0.8
+Equipo: macOS-26.6.2-arm64-arm-64bit | Python 3.9.6
+
+VERIFICACION DE DATOS
+mediciones_por_sensor: 1,000,000 filas
+mediciones_por_zona: 1,000,000 filas
+anomalias_por_zona: 10,000 filas
+resumen_diario_zona: 840 filas
+
+CONSULTAS FUNCIONALES
+ultimas_mediciones_sensor: correcta (20 filas)
+intervalo_temporal_sensor: correcta (48 filas)
+intervalo_temporal_zona: correcta (1200 filas)
+anomalias_zona: correcta (20 filas)
+resumen_diario_zona: correcta (42 filas)
