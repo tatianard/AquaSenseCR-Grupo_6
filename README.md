@@ -2,7 +2,7 @@
 
 XS0131 - Gestión de Bases de Datos y Análisis de Información
 
-AquaSenseCR utiliza **ScyllaDB**, una base de datos NoSQL de columnas anchas (*wide-column*).
+AquaSenseCR simula el monitoreo de una red de agua potable mediante 1 000 sensores distribuidos en 20 zonas. Utiliza **ScyllaDB**,  una base de datos NoSQL de columnas anchas (*wide-column*), para almacenar un millón de mediciones, consultar historiales por sensor y zona, identificar anomalías y generar resúmenes diarios
 
 ### Integrantes: 
 
@@ -22,6 +22,7 @@ Mediante **Docker Compose**, cada usuario puede ejecutar su propia instancia loc
 - Puerto local `9042` disponible.
 
 **Nota:** Si el puerto `9042` está ocupado, se debe liberar o modificar el puerto local en `docker-compose.yml`
+Modificar el `docker-compose.yml` implica hacer los ajustes en los siguientes archivos.
 
 ### 2. Verificar Docker
 
@@ -119,6 +120,9 @@ Este proyecto utiliza Python para conectarse a ScyllaDB y ejecutar las operacion
 
 - Python y la librería `scylla-driver` deben estar instalados.
 
+```bash
+python -m pip install scylla-driver
+```
 ### 2. Probar la conexión
 
 Desde la carpeta principal del proyecto, ejecutar:
@@ -146,6 +150,10 @@ Mediante `generar_datos.py` se simulan las mediciones sintéticas de los sensore
 - Python instalado y funcionando.
 - Librerías `scylla-driver`, `pandas` y `numpy` instaladas.
 
+```bash
+python -m pip install scylla-driver pandas numpy
+```
+
 ### 2. Generar los datos
 
 Ejecutar desde la carpeta principal del proyecto:
@@ -154,7 +162,7 @@ Ejecutar desde la carpeta principal del proyecto:
 python generar_datos.py
 ```
 
-### 2. Verificar los resultados
+### 3. Verificar los resultados
 
 El programa genera:
 
@@ -167,6 +175,9 @@ Los archivos se guardan automáticamente en la carpeta `data`:
 
 - `sensores.csv`
 - `mediciones.csv`
+
+**Nota:** La carpeta `data` no se incluye en GitHub, ya que los archivos CSV pueden generarse nuevamente ejecutando `generar_datos.py`
+Asimismo, la dimensión de los archivos sintéticos excede el límite de tamaño permitido por la plataforma.
 
 ## Carga de datos y consultas de prueba
 
